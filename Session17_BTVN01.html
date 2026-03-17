@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        body{
+            font-family:Arial, sans-serif;
+            background-color:#f3efe8;
+            display:flex;
+            justify-content:center;
+        }
+        .container{
+            width:600px;
+            background:white;
+            border-radius:10px;
+            overflow:hidden;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header{
+            background-color:#d6332c;
+            color:white;
+            text-align:center;
+            padding:20px;
+        }
+        .header h1{
+            margin:0;
+        }
+        .header p{
+            margin:5px 0 0;
+            font-size:14px;
+        }
+        .todo-list{
+            padding:20px;
+        }
+        .todo-item{
+            background:#f5eddc;
+            border-left:5px solid #ff8c00;
+            padding:15px;
+            margin-bottom:15px;
+            border-radius:8px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .task{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+        .task span{
+            font-size:16px;
+        }
+        .status{
+            color:#888;
+            font-style:italic;
+        }
+        .footer{
+            text-align:center;
+            padding:10px;
+            font-size:13px;
+            color:#777;
+            border-top:1px solid #eee;
+        }
+    </style>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Chuẩn bị Tết Nguyên Đán</h1>
+                <p>Danh sách việc cần làm</p>
+            </div>
+            <div class="todo-list" id="todoList">
+                <div class="todo-item">
+                    <div class="task">🌸 <span>Mua bánh chưng</span></div>
+                    <div class="status">Chưa làm</div>
+                </div>
+                <div class="todo-item">
+                    <div class="task">🌸 <span>Dọn nhà đón Tết</span></div>
+                    <div class="status">Chưa làm</div>
+                </div>
+            </div>
+            <div class="footer">Đã lưu vào localStorage lần đầu tiên • Refresh trang để kiểm tra</div>
+        </div>
+        <script>
+            const todos=[
+                {id:1,task:"Mua bánh chưng",done:false},
+                {id:2,task:"Dọn nhà đón Tết",done:false},
+                {id:3,task:"Gói bánh chưng",done:false},
+                {id:4,task:"Trang trí nhà cửa",done:false}
+            ];
+            const list=document.getElementById("todoList");
+            function renderTodos(arr){
+                list.innerHTML="";
+                arr.forEach(todo=>{
+                    const item=document.createElement("div");
+                    item.className="todo-item";
+                    item.innerHTML=`
+                        <div class="task">🌸 <span>${todo.task}</span></div>
+                        <div class="status">Chưa làm</div>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+            window.onload=function(){
+                renderTodos(todos);
+                if(!localStorage.getItem("myTodos")) {
+                    localStorage.setItem("myTodos",JSON.stringify(todos));
+                    console.log("Đã lưu todos vào localStorage");
+                }else{
+                    console.log("localStorage đã có dữ liệu");
+                }
+            };
+        </script>
+    </body>
+</html>

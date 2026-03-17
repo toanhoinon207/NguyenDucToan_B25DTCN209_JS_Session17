@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công việc chuẩn bị Tết</title>
+    <style>
+        body{
+            font-family: Arial;
+            background:#f5f2ea;
+            display:flex;
+            justify-content:center;
+        }
+
+        .container{
+            width:600px;
+            margin-top:30px;
+            background:white;
+            border-radius:10px;
+            overflow:hidden;
+        }
+
+        .header{
+            background:#d62828;
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+
+        .header h1{
+            margin:0;
+        }
+
+        .header p{
+            margin-top:5px;
+        }
+
+        .todo{
+            padding:15px;
+        }
+
+        .todo-item{
+            display:flex;
+            align-items:center;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:10px;
+            background:#f1e9d2;
+            cursor:pointer;
+        }
+
+        .todo-item.done{
+            background:#d7e5d9;
+            text-decoration:line-through;
+        }
+
+        .circle{
+            width:20px;
+            height:20px;
+            border:2px solid gray;
+            border-radius:50%;
+            margin-right:15px;
+        }
+
+        .todo-item.done .circle{
+            background:#2a9d8f;
+            border:none;
+        }
+
+        .footer{
+            text-align:center;
+            padding:15px;
+            font-size:14px;
+            color:gray;
+        }
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Công việc chuẩn bị Tết</h1>
+                <p>Click để đánh dấu hoàn thành</p>
+            </div>
+            <div class="todo" id="todo-list"></div>
+            <div class="footer">Trạng thái được lưu tự động vào localStorage • Refresh để kiểm tra</div>
+        </div>
+        <script>
+            const initialTodos=[
+                {text:"Mua bánh chưng",done:true},
+                {text:"Dọn nhà đón Tết",done:true},
+                {text:"Gói bánh chưng",done:false},
+                {text:"Trang trí nhà cửa bằng hoa mai, hoa đào",done:false},
+                {text:"Mua phong bao lì xì",done:false},
+                {text:"Chuẩn bị mâm ngũ quả",done:false}
+            ];
+            let todos=JSON.parse(localStorage.getItem("myTodos"));
+            if(!todos||!todos[0]?.text){
+                todos=initialTodos;
+                localStorage.setItem("myTodos",JSON.stringify(todos));
+            }
+            const list=document.getElementById("todo-list");
+            function renderTodos(){
+                list.innerHTML="";
+                todos.forEach((todo,index)=>{
+                    const item=document.createElement("div");
+                    item.className="todo-item";
+                    if(todo.done){
+                        item.classList.add("done");
+                    }
+                    item.innerHTML=`
+                        <div class="circle"></div>
+                        <div>${todo.text}</div>
+                    `;
+                    item.onclick=()=>{
+                        toggleTodo(index);
+                    };
+                    list.appendChild(item);
+                });
+            }
+            function toggleTodo(index){
+                todos[index].done=!todos[index].done;
+                localStorage.setItem("myTodos",JSON.stringify(todos));
+                renderTodos();
+
+            }
+            renderTodos();
+        </script>
+    </body>
+</html>
