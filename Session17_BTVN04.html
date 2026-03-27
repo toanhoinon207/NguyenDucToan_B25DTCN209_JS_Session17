@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công việc chuẩn bị Tết</title>
+    <style>
+        body{
+            font-family: Arial;
+            background:#ffffff;
+            display:flex;
+            justify-content:center;
+        }
+        .container{
+            width:600px;
+            margin-top:30px;
+            background:white;
+            border-radius:10px;
+            border: 1px solid #f5f2ea;
+            overflow:hidden;
+        }
+        .header{
+            background:#d62828;
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+        .header h1{
+            margin:0;
+        }
+        .header p{
+            margin-top:5px;
+        }
+        .todo{
+            padding:15px;
+        }
+        .todo-item{
+            display:flex;
+            align-items:center;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:10px;
+            background:#f1e9d2;
+            cursor:pointer;
+        }
+        .todo-item.done{
+            background:#d7e5d9;
+            text-decoration:line-through;
+        }
+        .circle{
+            width:20px;
+            height:20px;
+            border:2px solid gray;
+            border-radius:50%;
+            margin-right:15px;
+        }
+        .todo-item.done .circle{
+            background:#2a9d8f;
+            border:none;
+        }
+        .add-box{
+            display:flex;
+            gap:10px;
+            padding:15px;
+            background:#f5f2ea;
+        }
+        .add-box input{
+            flex:1;
+            padding:12px 15px;
+            border-radius:8px;
+            border:1px solid #ddd;
+            outline:none;
+            font-size:14px;
+            background:#f9f9f9;
+            transition:0.2s;
+        }
+        .add-box input:focus{
+            border-color:#f77f00;
+            background:#fff;
+        }
+        .add-box button{
+            padding:12px 20px;
+            background:#f77f00;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.2s;
+        }
+        .add-box button:hover{
+            background:#e76f00;
+        }
+        .delete-btn{
+            background:transparent;
+            border:none;
+            font-size:18px;
+            cursor:pointer;
+            color:#b0b0b0;
+            opacity:0.6;
+            transition:all 0.2s ease;
+        }
+        .delete-btn:hover{
+            color:#e63946;
+            opacity:1;
+            transform:scale(1.2);
+        }
+        .todo-item{
+            display:flex;
+            align-items:center;
+        }
+        .todo-text{
+            flex:1;
+        }
+        .footer{
+            text-align:center;
+            padding:15px;
+            font-size:14px;
+            color:gray;
+        }
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Công việc chuẩn bị Tết</h1>
+                <p>Click để đánh dấu hoàn thành</p>
+            </div>
+            <div class="add-box">
+                <input type="text" id="todo-input" placeholder="Nhập công việc mới...">
+                <button onclick="addTodo()">Thêm</button>
+            </div>
+            <div class="todo" id="todo-list"></div>
+            <div class="footer">Trạng thái được lưu tự động vào localStorage • Refresh để kiểm tra</div>
+        </div>
+        <script>
+            const initialTodos=[
+                {text:"Mua bánh chưng",done:true},
+                {text:"Dọn nhà đón Tết",done:true},
+                {text:"Gói bánh chưng",done:false},
+                {text:"Trang trí nhà cửa bằng hoa mai, hoa đào",done:false},
+                {text:"Mua phong bao lì xì",done:false},
+                {text:"Chuẩn bị mâm ngũ quả",done:false}
+            ];
+            let todos=JSON.parse(localStorage.getItem("myTodos"));
+            if(!todos||!todos[0]?.text){
+                todos=initialTodos;
+                localStorage.setItem("myTodos",JSON.stringify(todos));
+            }
+            const list=document.getElementById("todo-list");
+            const input=document.getElementById("todo-input");
+            function renderTodos(){
+                list.innerHTML="";
+                todos.forEach((todo,index)=>{
+                    const item=document.createElement("div");
+                    item.className="todo-item";
+                    if(todo.done){
+                        item.classList.add("done");
+                    }
+                    item.innerHTML=`
+                        <div class="circle"></div>
+                        <div class="todo-text">${todo.text}</div>
+                        <button class="delete-btn">🗑️</button>
+                    `;
+                    item.onclick=()=>{
+                        toggleTodo(index);
+                    };
+                    list.appendChild(item);
+                    const deleteBtn=item.querySelector(".delete-btn");
+                    deleteBtn.onclick=(e)=>{
+                        e.stopPropagation();
+                        deleteTodo(index);
+                    };
+                });
+            }
+            function toggleTodo(index){
+                todos[index].done=!todos[index].done;
+                localStorage.setItem("myTodos",JSON.stringify(todos));
+                renderTodos();
+            }
+            function addTodo(){
+                const text=input.value.trim();
+                if(!text){
+                    alert("Vui lòng nhập công việc!");
+                    return;
+                }
+                todos.unshift({text:text, done:false});
+                localStorage.setItem("myTodos",JSON.stringify(todos));
+                input.value="";
+                renderTodos();
+            }
+            input.addEventListener("keypress", function(e){
+                if(e.key==="Enter"){
+                    addTodo();
+                }
+            });
+            function deleteTodo(index){
+                const confirmDelete=confirm("Bạn có chắc muốn xóa công việc này?");
+                if(confirmDelete){
+                    todos.splice(index,1);
+                    localStorage.setItem("myTodos", JSON.stringify(todos))
+                }
+                renderTodos();
+            }
+            renderTodos();
+        </script>
+    </body>
+</html>
